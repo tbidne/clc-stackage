@@ -1,0 +1,86 @@
+cabal-version: 2.4
+name:          sequential
+version:       0.1
+author:        Thomas Bidne
+maintainer:    tbidne@prontonmail.com
+
+common common-lang
+  default-extensions:
+    DeriveAnyClass
+    DerivingVia
+    DuplicateRecordFields
+    ImportQualifiedPost
+    LambdaCase
+    OverloadedRecordDot
+    OverloadedStrings
+    StrictData
+    TypeFamilies
+
+library
+  import:           common-lang
+  exposed-modules:
+    Sequential.Args
+    Sequential.Cabal
+    Sequential.Cabal.CabalData
+    Sequential.Cabal.Package
+    Sequential.Cabal.Parser
+    Sequential.Env
+    Sequential.Report
+    Sequential.Runner
+    Sequential.Utils
+
+  build-depends:
+    , aeson                 >=2.0       && <2.3
+    , aeson-pretty          ^>=0.8.9
+    , base                  >=4.18.0.0  && <4.20
+    , bytestring            >=0.10.12.0 && <0.13
+    , Cabal-syntax          ^>=3.10.1.0
+    , containers            >=0.6.3.1   && <0.8
+    , directory             ^>=1.3.5.0
+    , file-io               ^>=0.1.0.0
+    , filepath              >=1.4.2.1   && <1.6
+    , nonempty-containers   >=0.3.4.2   && <0.4
+    , optparse-applicative  >=0.16.1.0  && <0.19
+    , pretty-terminal       ^>=0.1.0.0
+    , process               ^>=1.6.9.0
+    , text                  >=1.2.4.0   && <2.2
+    , time                  >=1.9.3     && <1.14
+
+  hs-source-dirs:   src
+  default-language: GHC2021
+
+executable sequential
+  import:           common-lang
+  main-is:          Main.hs
+  build-depends:
+    , base
+    , sequential
+
+  hs-source-dirs:   ./app
+  ghc-options:      -threaded -with-rtsopts=-N
+  default-language: GHC2021
+
+test-suite unit
+  import:           common-lang
+  type:             exitcode-stdio-1.0
+  main-is:          Main.hs
+  other-modules:
+    Unit.Prelude
+    Unit.Sequential.Env
+    Unit.Sequential.Report
+
+  build-depends:
+    , base
+    , Cabal-syntax
+    , containers
+    , filepath
+    , nonempty-containers
+    , sequential
+    , tasty                >=1.1.0.3 && <1.6
+    , tasty-hunit          >=0.9     && <0.11
+    , text
+    , time
+
+  hs-source-dirs:   test/unit
+  ghc-options:      -threaded -with-rtsopts=-N
+  default-language: GHC2021
