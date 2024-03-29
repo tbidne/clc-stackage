@@ -45,6 +45,7 @@
       };
       pkgs_new = import nixpkgs_new { inherit system; };
       compiler = pkgs_new.haskell.packages.ghc982;
+      compiler964 = pkgs_new.haskell.packages.ghc964;
 
       # There are some packages that do not build well with nix:
       #
@@ -138,6 +139,10 @@
             #export PATH=/path/to/custom/ghc/stage1/bin/:$PATH
             ${throw "Remove this line from the flake.nix and add your GHC to the PATH"}
           '';
+        };
+
+        dev = pkgs.mkShell {
+          buildInputs = deps ++ [ compiler964.ghc compiler964.haskell-language-server ];
         };
 
         # This shell is useless wrt the intended purpose of this repo,
