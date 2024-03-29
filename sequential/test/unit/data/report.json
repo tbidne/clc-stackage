@@ -1,0 +1,30 @@
+{
+    "startTime": "start",
+    "endTime": "end",
+    "stats": {
+        "failureRate": 20,
+        "numFailures": 2,
+        "numSuccesses": 5,
+        "numUntested": 3,
+        "successRate": 50,
+        "untestedRate": 30
+    },
+    "results": {
+        "failures": [
+            "p4",
+            "p5"
+        ],
+        "untested": [
+            "p6",
+            "p7",
+            "p8"
+        ],
+        "successes": [
+            "p1",
+            "p2",
+            "p3",
+            "p4",
+            "p5"
+        ]
+    }
+}

@@ -122,8 +122,12 @@
         # primarily to test that there is nothing wrong with the package set
         # itself for nix users, as building some of the libs with a custom
         # GHC is a challenge on NixOS.
+        #
+        # It is also used in CI.
         with-ghc = pkgs.mkShell {
           buildInputs = deps ++ [ compiler.ghc ];
+
+          LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath ldDeps}:$LD_LIBRARY_PATH";
         };
       };
     };

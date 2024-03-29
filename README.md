@@ -15,7 +15,7 @@ The procedure is as follows:
 1. Rebase changes, mandated by your proposal, atop of `ghc-9.8` branch.
 2. Compile a patched GHC, say, `~/ghc/_build/stage1/bin/ghc`.
 3. `git clone https://github.com/Bodigrim/clc-stackage`, then `cd clc-stackage`.
-4. Run `cabal build -w ~/ghc/_build/stage1/bin/ghc --keep-going` and wait for a long time.
+4. Run `cabal build clc-stackage -w ~/ghc/_build/stage1/bin/ghc --keep-going` and wait for a long time.
   * On a recent Macbook Air it takes around 12 hours, YMMV.
   * You can interrupt `cabal` at any time and rerun again later.
   * Consider setting `--jobs` to retain free CPU cores for other tasks.
@@ -42,3 +42,44 @@ Note that it is not actively maintained, so it may require some tweaking to get 
   ```
 
   Nix users can uncomment (and modify) this line in the `flake.nix`.
+
+## Sequential Builds
+
+There is an exe `sequential` that can be used to build all packages on a level more granular than everything at once. This still requires building everything so it does not save work (in fact it can be significantly slower). Nevertheless it exists for when building every package simultaneously is not feasible (e.g. lack of memory, nix issues).
+
+First build the exe. Ideally you will want to use a standard, non-custom GHC, as using a custom GHC can take quite long to build all dependencies. Nix users can use the `with-ghc` shell to get GHC (`nix develop .#with-ghc`). Moreover, installing the exe is a better idea than using `cabal run`, as `build/install/run` requires running `cabal`'s constraint solver, which takes several minutes.
+
+```sh
+$ cabal install sequential --installdir=bin
+```
+
+Once `sequential` is built, make the following changes to `cabal.project` (or add to `cabal.project.local`):
+
+- Append the entirety of `clc-stackage.cabal`'s `build-depends` to the `constraints` section. This ensures the right transitive dependencies will always be used.
+- Add the path to your ghc. Note that this should be an absolute path e.g.
+
+    ```
+    with-compiler: /path/to/ghc/_build/stage1/bin/ghc
+    ```
+
+Nix users will want to switch to the default shell (`nix develop`). Then run e.g.
+
+```sh
+$ ./bin/sequential
+```
+
+This will:
+
+- Build every package one at a time, saving the results in `output/report.json`.
+- Save the current progress to `output/cache.json`. This allows us to interrupt the program (e.g. `CTRL-C`) and then pick up where we left off. The cache can be disabled with `--no-cache`.
+- Write failing stdout/stderr to `output/logs`. This can be adjusted with the `--write-logs` option.
+
+There is a `--batch N` option that will build `N` packages at the same time, rather than individually. This may help performance (e.g. `--batch 20`).
+
+Finally, if you are on `ghc >= 9.8` and `cabal >= 3.12`, the `--jobs` option can be used with cabal's semaphore functionality, for a potentially faster build: `--jobs semaphore`.
+
+For details, see
+
+```sh
+$ sequential --help
+```
