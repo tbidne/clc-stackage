@@ -163,7 +163,7 @@ library
              bank-holiday-germany ==1.2.0.0,
              bank-holidays-england ==0.2.0.9,
              barbies ==2.1.1.0,
-             base ==4.19.1.0,
+             base ^>=4.19,
              base16 ==1.0,
              base16-bytestring ==1.0.2.0,
              base32string ==0.9.1,

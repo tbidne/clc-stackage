@@ -112,9 +112,31 @@
           # The stack library requires GHC to be on the PATH at build time due
           # to TH.
           shellHook = ''
-            #export PATH=/path/to/custom/ghc/stage1/bin/:$PATH
-            ${throw "Remove this line from the flake.nix and add your GHC to the PATH"}
           '';
+        };
+
+        ci = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            curl # curl
+            fribidi # simple-pango
+            libdatrie # simple-pango
+            libGLU # GLURaw
+            libselinux # simple-pango
+            libsepol # simple-pango
+            libthai # simple-pango
+            libxml2 # c14n
+            nettle # nettle
+            openal # OpenAL
+            pango # simple-pango
+            pcre2 # simple-cairo
+            pkg-config
+            systemdMinimal # hidapi requires udev
+            util-linux # simple-pango requires mount
+            xorg.libXdmcp # simple-cairo
+            xz # lzma
+          ] ++ ldDeps;
+
+          LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath ldDeps}:$LD_LIBRARY_PATH";
         };
 
         # This shell is useless wrt the intended purpose of this repo,
