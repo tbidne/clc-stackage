@@ -117,6 +117,16 @@
           '';
         };
 
+        dev = pkgs.mkShell {
+          buildInputs = [
+            compiler.ghc
+            compiler.haskell-language-server
+            compiler.ormolu
+            pkgs.zlib
+            pkgs_new.cabal-install
+          ];
+        };
+
         # This shell is useless wrt the intended purpose of this repo,
         # as the whole point is building stackage w/ a custom GHC. It exists
         # primarily to test that there is nothing wrong with the package set
