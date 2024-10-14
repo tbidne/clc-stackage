@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - otf2
 
   pull_request:
     branches:
