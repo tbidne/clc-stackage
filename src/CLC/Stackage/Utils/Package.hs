@@ -145,8 +145,8 @@ nameParser txt
   | T.null name = Nothing
   | otherwise = Just (name, T.stripStart rest)
   where
-    (name, rest) = T.break isNameChar txt
-    isNameChar c = c == ' ' || c == '='
+    (name, rest) = T.break notNameChar txt
+    notNameChar c = c == ' ' || c == '='
 
 -- Parse "installed".
 versionInstalledParser :: Text -> Maybe (PackageVersion, Text)
