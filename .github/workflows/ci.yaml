@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - ci-run
 
   pull_request:
     branches:
@@ -75,3 +76,6 @@ jobs:
 
       - name: Dry run
         run: nix develop .#ci -Lv -c bash -c '.github/scripts/dry_run.sh'
+
+      - name: Build
+        run: nix develop .#ci -Lv -c bash -c '.github/scripts/build.sh'
