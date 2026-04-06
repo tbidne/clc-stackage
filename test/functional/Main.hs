@@ -179,11 +179,13 @@ runGolden getNoCleanup params =
     -- Strip non-determinism from logs (e.g. version numbers, snapshots).
     massageLogs bs =
       fromMaybe bs $
-        asum $ fmap ($ bs)
-          [ fixGhcStr,
-            fixSnapshotStr,
-            fixNumPkgs
-          ]
+        asum $
+          fmap
+            ($ bs)
+            [ fixGhcStr,
+              fixSnapshotStr,
+              fixNumPkgs
+            ]
       where
         fixGhcStr b = do
           (pre, r1) <- Parser.Utils.stripInfix "ghc: " b
