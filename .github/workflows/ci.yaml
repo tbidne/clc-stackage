@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - snapshot-url
 
   pull_request:
     branches:
@@ -58,12 +59,7 @@ jobs:
         shell: bash
         run: .github/scripts/print_logs.sh
   dry-run:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-        - "ubuntu-latest"
-    runs-on: ${{ matrix.os }}
+    runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@v6
 
@@ -122,7 +118,7 @@ jobs:
   # There is no harm in going overboard e.g. if we have an index that is out of
   # range, that job will simply end with a warning message. We should
   # therefore err on the side of adding too many indices, rather than too few.
-  build-batch:
+  build-batch-default:
     needs: [build-batch-indexes, dry-run]
     strategy:
       fail-fast: false

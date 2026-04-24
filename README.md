@@ -1,6 +1,7 @@
 # `clc-stackage`
 
 [![ci](https://github.com/haskell/clc-stackage/actions/workflows/ci.yaml/badge.svg)](https://github.com/haskell/clc-stackage/actions/workflows/ci.yaml)
+[![nightly](https://github.com/haskell/clc-stackage/actions/workflows/ci_nightly.yaml/badge.svg)](https://github.com/haskell/clc-stackage/actions/workflows/ci_nightly.yaml)
 
 ## How to?
 
@@ -14,7 +15,19 @@ An impact assessment is due when
 
 The procedure is as follows:
 
-1. Rebase changes, mandated by your proposal, atop the ghc branch (or tag) that corresponds to the current [stackage nightly](https://www.stackage.org/nightly). For example, if the latest snapshot ghc is `ghc-9.12.3`, we would want to rebase our changes on the `ghc-9.12.3-release` tag.
+1. Rebase changes, mandated by your proposal, atop the ghc branch (or tag) that corresponds to the snapshot you intend to use. The most natural snapshot choices are either the current stable default:
+
+    ```haskell
+    -- CLC.Stackage.Parser.API
+    defaultSnapshot :: String
+    defaultSnapshot = "nightly-<date>"
+    ```
+
+    Or just `nightly` for the latest. Ideally we would like to use `nightly`, as it is the most recent and likely easiest GHC to build. But `nightly` can sometimes bring in new, problematic packages, hence we also list a "stable default", as a last known "good" snapshot.
+
+    Both snapshots have CI jobs that attempt to build them, so CI can be a useful indicator of the current snapshots' health.
+
+    As an example, if our chosen snapshot corresponds to `ghc-9.12.3`, we would want to rebase our changes on the `ghc-9.12.3-release` tag.
 
 2. Compile a patched GHC, say, `~/ghc/_build/stage1/bin/ghc`.
 
@@ -70,7 +83,13 @@ The procedure is as follows:
 
 ### Troubleshooting
 
-Because we build with `nightly` and are at the mercy of cabal's constraint solver, it is possible to run into solver / build issues that have nothing to do with our custom GHC. Some of the most common problems include:
+#### Stable default
+
+While the hardcoded default snapshot is more stable than `nightly`, we can run into problems with newer GHCs. For example, it used to be impossible to build a snapshot for `ghc-A.B.C` with `ghc-A.B.(C+1)`. This problem was addressed, though it is still possible for issues to arise as time goes on.
+
+#### Nightly
+
+Building with `nightly` leaves us at the mercy of cabal's constraint solver, hence it is possible to run into solver / build issues that have nothing to do with our custom GHC. Some of the most common problems include:
 
 - Nightly adds a new, problematic package `p` e.g.
 
@@ -133,7 +152,28 @@ In general, user mitigations for solver / build problems include:
 
 #### Querying stackage
 
-By default, `clc-stackage` queries https://www.stackage.org/ for snapshot information. In situations where this is not desirable (e.g. the server is not working, or we want to test a custom snapshot), the snapshot can be overridden:
+By default, `clc-stackage` queries `https://www.stackage.org/nightly-<date>` for snapshot information. In situations where this is not desirable (e.g. the server is not working, or we want to test a custom snapshot), the snapshot can be overridden in two ways.
+
+##### Supplying another url
+
+The `--snapshot-url` param can be used to override the default snapshot e.g.
+
+```sh
+# resolves to https://www.stackage.org/nightly-2026-04-23
+$ clc-stackage --snapshot-url=nightly-2026-04-23
+
+# https://www.stackage.org/lts-24.38
+$ clc-stackage --snapshot-url=lts-24.38
+
+# https://some-url
+$ clc-stackage --snapshot-url=https://some-url
+```
+
+Note that we expect the url to have the same API as stackage, and fall back to `<url>/cabal.config` if its json endpoint is not working.
+
+##### Supplying a manual snapshot
+
+We can also supply a snapshot manually:
 
 ```sh
 $ clc-stackage --snapshot-path=path/to/snapshot

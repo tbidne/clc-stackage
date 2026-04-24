@@ -1,0 +1,78 @@
+name: ci_nightly
+on:
+  push:
+    branches:
+      - master
+      - snapshot-url
+
+  pull_request:
+    branches:
+      - master
+
+  schedule:
+    # Every day at 00:00 UTC.
+    #
+    # https://crontab.guru
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+jobs:
+  dry-run:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Dry run
+        run: nix develop .#ci -Lv -c bash -c '.github/scripts/dry_run.sh'
+
+      # Upload installed binary so that build-batch does not need to re-install
+      # it.
+      - name: Upload clc-stackage binary
+        uses: actions/upload-artifact@v7
+        with:
+          name: clc-stackage-binary
+          path: ./bin/clc-stackage
+          retention-days: 1
+
+  # Uses jq's 'range(m; n)' operator to create list of indexes from [m, n)
+  # for the build-batch job. Slightly nicer than manually listing all of them.
+  build-batch-indexes:
+    runs-on: "ubuntu-latest"
+    outputs:
+      indexes: ${{ steps.set-batch-indexes.outputs.indexes }}
+    steps:
+      - id: set-batch-indexes
+        run: echo "indexes=$(jq -cn '[range(1; 19)]')" >> $GITHUB_OUTPUT
+
+  build-batch-nightly:
+    needs: [build-batch-indexes, dry-run]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: ${{ fromJSON(needs.build-batch-indexes.outputs.indexes) }}
+    name: Batch group ${{ matrix.index }}
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      # Download clc-stackage binary from dry-run job.
+      - name: Download binary
+        uses: actions/download-artifact@v7
+        with:
+          name: clc-stackage-binary
+          path: ./bin
+
+      - name: Build
+        run: nix develop .#ci -Lv -c bash -c '.github/scripts/batch_index.sh ${{ matrix.index }} nightly'

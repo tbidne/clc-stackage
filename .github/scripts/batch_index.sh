@@ -5,6 +5,11 @@ set -e
 # total time reasonable.
 batch_index=$1
 
+url=""
+if [[ -n "$2" ]]; then
+  url="--snapshot-url=$2"
+fi
+
 # -f not -x since downloaded exe may not have executable permissions.
 if [[ -f ./bin/clc-stackage ]]; then
   echo "*** ./bin/clc-stackage exists, not re-installing ***"
@@ -31,7 +36,8 @@ set +e
   --batch 200 \
   --batch-index $batch_index \
   --cabal-options="--semaphore" \
-  --cleanup off
+  --cleanup off \
+  $url
 
 ec=$?
 

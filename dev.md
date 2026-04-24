@@ -75,13 +75,21 @@ The executable that actually runs. This is a very thin wrapper over `runner`, wh
 
 ## Updating to a new snapshot
 
-`clc-stackage` is based on `nightly` -- which changes automatically -- meaning we do not necessarily have to do anything when a new (minor) snapshot is released. On the other hand, *major* snapshot updates will almost certainly bring in new packages that need to be excluded, so there are some general "update steps" we will want to take:
+`clc-stackage` is based on a `nightly` snapshot. We previously tried just using `nightly`, but we run into build issues every few days because e.g. a new package is added that needs to be excluded or have a flag set. We therefore pick an arbitrary `nightly` snapshot that has many packages in it (generally 3000+). When we do want to update the snapshot, there are some general steps we will want to take:
 
-1. Modify [package_index.jsonc](package_index.jsonc) as needed. That is, updating the snapshot major version will probably bring in some new packages that we do not want. The update process is essentially trial-and-error i.e. run `clc-stackage` as normal, and later add any failing packages to `package_index.excluded` that should be excluded.
+1. Update the snapshot url:
 
-2. Update `ghc-version` in [.github/workflows/ci.yaml](.github/workflows/ci.yaml).
+    ```haskell
+    -- CLC.Stackage.Parser.API
+    defaultSnapshot :: String
+    defaultSnapshot = "nightly-2026-04-23"
+    ```
 
-3. Optional: Update nix:
+2. Modify [package_index.jsonc](package_index.jsonc) as needed. That is, updating the snapshot version will probably bring in some new packages that we do not want. The update process is essentially trial-and-error i.e. run `clc-stackage` as normal, and later add any failing packages to `package_index.excluded` that should be excluded.
+
+3. If this is a major ghc update, update the `ghc-version` in [.github/workflows/ci.yaml](.github/workflows/ci.yaml).
+
+4. Optional: Update nix:
 
     - Inputs (`nix flake update`).
     - GHC: Update the `compiler = pkgs.haskell.packages.ghc<vers>;` line.
