@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - ghc-update
 
   pull_request:
     branches:

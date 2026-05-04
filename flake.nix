@@ -31,7 +31,7 @@
       pkgs = import nixpkgs {
         inherit system;
       };
-      compiler = pkgs.haskell.packages.ghc9122;
+      compiler = pkgs.haskell.packages.ghc9123;
 
       # There are some packages that do not build well with nix:
       #

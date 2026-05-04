@@ -83,11 +83,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1773937910,
-        "narHash": "sha256-PisMBpM8tdlBEjIC0IYnadABcObRWZZNxkfQOT4lYmI=",
+        "lastModified": 1774004997,
+        "narHash": "sha256-DG0sk0oQ39dWp9+PnNw6bT5UPZ6mPsRcQ3TE8jnYUig=",
         "ref": "refs/heads/main",
-        "rev": "3f63b1bbbaea4e41d6bddb6a152935e597fc9db3",
-        "revCount": 359,
+        "rev": "36f8ef0dc3afbee6ce72db2629527943a5cac73b",
+        "revCount": 362,
         "type": "git",
         "url": "https://gitlab.haskell.org/ghc/ghc.nix.git"
       },
