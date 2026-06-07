@@ -87,6 +87,7 @@
       "flac",
       "flac-picture",
       "follow-file",
+      "fontwhich", // exe
       "freckle-app",
       "freenect",
       "fsnotify",
@@ -140,6 +141,7 @@
       "gi-javascriptcore4",
       "gi-javascriptcore6",
       "gi-pango",
+      "gi-pangocairo",
       "gi-soup",
       "gi-soup2",
       "gi-soup3",
