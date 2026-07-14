@@ -432,6 +432,11 @@
   //
   // Boot packages taken from:
   // https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/libraries/version-history
+  //
+  // At some point we can expect to run clc-stackage with a GHC that supports
+  // reinstallable boot libs. We should then remove this group, as it is
+  // sometimes a pain to support (e.g. bounds are required by some packages in
+  // the snapshot).
   "unpinned": [
     "array",
     "base",
