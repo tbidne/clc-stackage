@@ -26,3 +26,5 @@ constraints: ghc-lib-parser-ex -auto
 constraints: mysql-haskell +crypton-1-1
 constraints: path +os-string
 constraints: stylish-haskell +ghc-lib
+-- Package coco requires text >= 2.14.
+constraints: text >= 2.1.4
