@@ -74,6 +74,7 @@
       "Ebnf2ps",
       "elynx",
       "emd",
+      "encapsule", // exe
       "equal-files",
       "essence-of-live-coding-pulse",
       "experimenter",
