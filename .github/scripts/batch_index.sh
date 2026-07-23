@@ -5,19 +5,7 @@ set -e
 # total time reasonable.
 batch_index=$1
 
-# -f not -x since downloaded exe may not have executable permissions.
-if [[ -f ./bin/clc-stackage ]]; then
-  echo "*** ./bin/clc-stackage exists, not re-installing ***"
-
-  # May need to add permissions, if this exe was downloaded
-  chmod a+x ./bin/clc-stackage
-else
-  echo "*** Updating cabal ***"
-  cabal update
-
-  echo "*** Installing clc-stackage ***"
-  cabal install exe:clc-stackage --installdir=./bin --overwrite-policy=always
-fi
+source .github/scripts/install.sh
 
 if [[ -d output ]]; then
   rm -r output
@@ -27,7 +15,7 @@ echo "*** Building with --batch-index $batch_index ***"
 
 set +e
 
-./bin/clc-stackage \
+clc-stackage \
   --batch 200 \
   --batch-index $batch_index \
   --cabal-options="--semaphore" \
