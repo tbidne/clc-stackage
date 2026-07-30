@@ -191,6 +191,7 @@
       // Fails on CI with:
       //   "<no location info>: error: Prelude.!!: index too large"
       "horde-ad",
+      "HDBC-odbc", // odbc
       "headroom", // segfault
       "hinotify",
       "hkgr",
