@@ -15,8 +15,8 @@ allow-older: *:*
 
 constraints: bson -_old-network
 -- cabal2spec requires Cabal-syntax < 3.15
-constraints: Cabal < 3.15
-constraints: Cabal-syntax < 3.15
+constraints: any.Cabal < 3.15
+constraints: any.Cabal-syntax < 3.15
 constraints: hlint +ghc-lib
 constraints: ghc-lib-parser-ex -auto
 -- There are two valid configurations for mysql-haskell:
@@ -30,4 +30,4 @@ constraints: mysql-haskell +crypton-1-1
 constraints: path +os-string
 constraints: stylish-haskell +ghc-lib
 -- Package coco requires text >= 2.14.
-constraints: text >= 2.1.4
+constraints: any.text >= 2.1.4
