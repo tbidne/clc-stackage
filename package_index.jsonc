@@ -206,8 +206,6 @@
       "hopenpgp-tools", // exe
       "hopenssl",
       "hp2pretty",
-      "hpqtypes",
-      "hpqtypes-extras",
       "hruby",
       "hs-captcha",
       "hs-GeoIP",
@@ -419,6 +417,8 @@
     ],
     "windows": [
       "hfsevents",
+      "hpqtypes",
+      "hpqtypes-extras",
       "postgresql-libpq",
       "vty-unix"
     ]
