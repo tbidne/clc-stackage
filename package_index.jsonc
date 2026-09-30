@@ -418,6 +418,7 @@
     "windows": [
       "hfsevents",
       "hpqtypes",
+      "hpqtypes-effectful",
       "hpqtypes-extras",
       "postgresql-libpq",
       "vty-unix"
